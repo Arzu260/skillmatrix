@@ -1,0 +1,35 @@
+# Arranca PostgreSQL y SkillMatrix juntos:   docker compose up -d
+# Solo la base de datos (para desarrollar con "python app.py"):   docker compose up -d db
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: skillmatrix
+      POSTGRES_USER: skillmatrix
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cambia-esta-clave}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skillmatrix"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://skillmatrix:${POSTGRES_PASSWORD:-cambia-esta-clave}@db:5432/skillmatrix
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+      SKILLMATRIX_DEMO: ${SKILLMATRIX_DEMO:-1}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+    ports:
+      - "5000:5000"
+
+volumes:
+  pgdata:

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkillMatrix · Documentación de la API</title>
+  <link rel="stylesheet" href="/static/vendor/swagger-ui.css">
+  <style>
+    body { margin: 0; background: #fff; }
+    .top { background: #17324D; color: #fff; padding: 14px 24px; font: 600 16px "Segoe UI", system-ui, sans-serif; display: flex; justify-content: space-between; align-items: center; }
+    .top a { color: #B3DCE7; font-weight: 500; font-size: 14px; }
+    .swagger-ui .topbar { display: none; }
+  </style>
+</head>
+<body>
+  <div class="top"><span>SkillMatrix · API v1</span><a href="/">Volver a la aplicación</a></div>
+  <div id="ui"></div>
+  <script src="/static/vendor/swagger-ui-bundle.js"></script>
+  <script>
+    SwaggerUIBundle({ url: "/api/v1/openapi.json", dom_id: "#ui", deepLinking: true,
+                      persistAuthorization: true, tryItOutEnabled: false, docExpansion: "list" });
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: skillmatrix
+          POSTGRES_PASSWORD: skillmatrix
+          POSTGRES_DB: skillmatrix_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U skillmatrix"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://skillmatrix:skillmatrix@localhost:5432/skillmatrix_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt pyflakes
+
+      - name: Análisis estático (Python)
+        run: python -m pyflakes *.py tests/
+
+      - name: Sintaxis JavaScript
+        run: node --check static/app.js
+
+      - name: Pruebas
+        run: pytest -q
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagen
+        run: docker build -t skillmatrix:ci .

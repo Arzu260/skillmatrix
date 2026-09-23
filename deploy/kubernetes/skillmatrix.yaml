@@ -1,0 +1,82 @@
+# Ejemplo genérico para Kubernetes. Requisitos:
+#   - Imagen publicada en vuestro registro:  docker build -t REGISTRO/skillmatrix:2.0.0 . && docker push ...
+#   - Un PostgreSQL accesible desde el clúster (gestionado o desplegado aparte).
+# Aplicar:  kubectl apply -n skillmatrix -f skillmatrix.yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: skillmatrix
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://skillmatrix:CAMBIAR@postgres.basedatos.svc:5432/skillmatrix"
+  ADMIN_PASSWORD: "CAMBIAR"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: skillmatrix
+data:
+  SKILLMATRIX_DEMO: "0"
+  COOKIE_SECURE: "1"
+  THREADS: "8"
+  DB_POOL_SIZE: "10"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skillmatrix
+  labels: { app: skillmatrix }
+spec:
+  replicas: 2                      # admite varias réplicas (ver docs/DESPLIEGUE.md, «Escalado»)
+  selector:
+    matchLabels: { app: skillmatrix }
+  template:
+    metadata:
+      labels: { app: skillmatrix }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 10001 }
+      containers:
+        - name: skillmatrix
+          image: REGISTRO/skillmatrix:2.0.0
+          ports: [{ containerPort: 5000, name: http }]
+          envFrom:
+            - secretRef: { name: skillmatrix }
+            - configMapRef: { name: skillmatrix }
+          readinessProbe:            # comprueba también la conexión a la base de datos
+            httpGet: { path: /api/health, port: http }
+            periodSeconds: 10
+          livenessProbe:             # solo el proceso: una caída de la BD no debe reiniciar los pods
+            tcpSocket: { port: http }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: "1",  memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skillmatrix
+spec:
+  selector: { app: skillmatrix }
+  ports: [{ port: 80, targetPort: http, name: http }]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skillmatrix
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+spec:
+  ingressClassName: nginx          # ajusta a vuestro controlador de Ingress
+  tls:
+    - hosts: [skillmatrix.empresa.local]
+      secretName: skillmatrix-tls
+  rules:
+    - host: skillmatrix.empresa.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: skillmatrix, port: { name: http } } }

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkillMatrix · Habilidades del equipo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><rect width='4.5' height='4.5' fill='%2317324D'/><rect x='5.5' width='4.5' height='4.5' fill='%236FB3C9'/><rect y='5.5' width='4.5' height='4.5' fill='%23B3DCE7'/><rect x='5.5' y='5.5' width='4.5' height='4.5' fill='%232F7F9E'/></svg>">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<!-- Login -->
+<section id="login" class="login hidden">
+  <div class="login-art">
+    <div class="brand"><span class="brand-mark"><i style="background:#fff"></i><i style="background:var(--l3)"></i><i style="background:var(--l2)"></i><i style="background:var(--l4)"></i></span>SkillMatrix</div>
+    <div>
+      <h1>Quién sabe qué, en todo el equipo.</h1>
+      <p>Registra el nivel de cada persona en cada tecnología, compáralo con lo que pide su puesto y decide dónde formar.</p>
+    </div>
+    <div class="login-grid" id="login-grid" aria-hidden="true"></div>
+  </div>
+  <form class="login-form" id="login-form">
+    <h2>Iniciar sesión</h2>
+    <label class="field">Usuario<input name="username" autocomplete="username" required></label>
+    <label class="field">Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+    <div class="error" id="login-error"></div>
+    <button class="btn primary" type="submit">Entrar</button>
+  </form>
+</section>
+
+<!-- Aplicación -->
+<div id="app" class="shell hidden">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"><i style="background:#fff"></i><i style="background:var(--l3)"></i><i style="background:var(--l2)"></i><i style="background:var(--l4)"></i></span>SkillMatrix</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-foot">
+      <strong id="user-name"></strong><span id="user-role"></span><br>
+      <button id="btn-password">Cambiar contraseña</button><br>
+      <button id="btn-logout">Cerrar sesión</button>
+    </div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+
+<script src="/static/vendor/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

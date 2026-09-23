@@ -1,0 +1,28 @@
+# /etc/systemd/system/skillmatrix.service
+# Ejemplo para servidores Linux. Ajusta rutas y usuario.
+#   sudo systemctl daemon-reload && sudo systemctl enable --now skillmatrix
+#   journalctl -u skillmatrix -f          (ver el registro)
+[Unit]
+Description=SkillMatrix - matriz de habilidades
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=skillmatrix
+Group=skillmatrix
+WorkingDirectory=/opt/skillmatrix
+# La configuración se lee de /opt/skillmatrix/.env (permisos 600, propietario skillmatrix)
+ExecStart=/opt/skillmatrix/.venv/bin/python app.py
+Restart=on-failure
+RestartSec=5
+
+# Endurecimiento básico
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/skillmatrix
+
+[Install]
+WantedBy=multi-user.target

@@ -6,9 +6,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 
 ### Cambiado
 - CI: `actions/checkout` y `actions/setup-python` actualizadas a v7 (Node.js 24) y ejecución fijada en Ubuntu 24.04.
+- Dependencias de Python con rango acotado a su versión mayor (`>=X,<X+1`), para que una instalación nueva no
+  traiga una versión mayor sin probar.
 
 ### Añadido
-- Dependabot: propone cada semana las actualizaciones de las acciones de GitHub y de las dependencias de Python.
+- Dependabot: propone cada semana las actualizaciones de las acciones de GitHub y, para Python, solo las versiones
+  que quedan fuera del rango permitido (`versioning-strategy: increase-if-necessary`).
 
 ### Corregido
 - Las pruebas no se ejecutaban con `pytest` a secas (faltaba `pytest.ini`).

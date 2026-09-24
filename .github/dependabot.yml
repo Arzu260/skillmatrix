@@ -12,6 +12,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Solo propone cambios cuando una versión nueva queda fuera del rango de requirements*.txt
+    # (p. ej. una nueva versión mayor). Las menores y parches ya se instalan sin tocar nada.
+    versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 5
     commit-message:
       prefix: "Dependencias"

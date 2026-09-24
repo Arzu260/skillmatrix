@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # versión fija: se actualiza de forma consciente
     services:
       postgres:
         image: postgres:16
@@ -22,9 +22,9 @@ jobs:
     env:
       TEST_DATABASE_URL: postgresql://skillmatrix:skillmatrix@localhost:5432/skillmatrix_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -43,8 +43,8 @@ jobs:
         run: pytest -q
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # versión fija: se actualiza de forma consciente
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Construir imagen
         run: docker build -t skillmatrix:ci .

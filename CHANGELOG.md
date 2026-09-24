@@ -4,6 +4,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 
 ## [Sin publicar]
 
+### Cambiado
+- CI: `actions/checkout` y `actions/setup-python` actualizadas a v7 (Node.js 24) y ejecución fijada en Ubuntu 24.04.
+
+### Añadido
+- Dependabot: propone cada semana las actualizaciones de las acciones de GitHub y de las dependencias de Python.
+
+### Corregido
+- Las pruebas no se ejecutaban con `pytest` a secas (faltaba `pytest.ini`).
+
 ## [2.0.0] - 2026-09-23
 
 ### Añadido
